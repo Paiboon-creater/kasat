@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สวนเกษตรคุณไพบูลย์ - จำหน่ายพันธุ์ไม้คุณภาพ</title>
+    <!-- ใช้ Tailwind CSS เพื่อความสวยงามและสะดวกรวดเร็ว -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-green-50 text-gray-800">
+
+    <!-- ส่วนหัวเว็บไซต์ (Header) -->
+    <header class="bg-green-700 text-white shadow-md py-6 px-4 text-center">
+        <h1 class="text-3xl font-bold">🌿 สวนเกษตรคุณไพบูลย์</h1>
+        <p class="mt-2 text-green-100">จำหน่ายหน่อกล้วย หน่อไผ่ และกิ่งพันธุ์คุณภาพดี พร้อมปลูก</p>
+    </header>
+
+    <!-- ส่วนแสดงรายการสินค้า (Product Grid) -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-semibold mb-6 text-green-800 border-b-2 border-green-200 pb-2">📦 รายการพันธุ์ไม้ทั้งหมด</h2>
+        
+        <!-- พื้นที่สำหรับแสดงสินค้าที่จะถูกดึงมาจาก Supabase -->
+        <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- ข้อมูลสินค้าจะถูกแสดงที่นี่ผ่าน JavaScript -->
+            <p class="text-gray-500 col-span-full text-center py-10">กำลังโหลดข้อมูลสินค้าจากระบบ...</p>
+        </div>
+    </main>
+
+    <!-- ส่วนท้ายเว็บไซต์ -->
+    <footer class="bg-green-900 text-green-200 text-center py-6 mt-12">
+        <p>ติดต่อสอบถามเพิ่มเติม | สวนตั้งอยู่ที่ อ.บ่อทอง จ.ชลบุรี</p>
+        <p class="text-sm mt-1">&copy; 2026 Paiboon Garden. All rights reserved.</p>
+    </footer>
+
+    <!-- เรียกใช้งาน Supabase JavaScript Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ตั้งค่าการเชื่อมต่อ Supabase ของคุณไพบูลย์
+        const SUPABASE_URL = 'https://siiiifesdjuunwmwozfb.supabase.co';
+        // หมายเหตุ: ใช้ Anon/Public Key ของโปรเจกต์คุณไพบูลย์มาใส่ตรงนี้ครับ
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; 
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function loadProducts() {
+            const container = document.getElementById('product-list');
+            
+            // ดึงข้อมูลจากตาราง product_kasat
+            const { data, error } = await supabaseClient
+                .from('product_kasat')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error('Error loading products:', error);
+                container.innerHTML = `<p class="text-red-500 col-span-full text-center">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 col-span-full text-center">ยังไม่มีรายการสินค้าในระบบ</p>`;
+                return;
+            }
+
+            // ล้างข้อความ Loading ออก
+            container.innerHTML = '';
+
+            // วนลูปสร้างการ์ดแสดงสินค้าแต่ละชิ้น
+            data.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 flex flex-col justify-between';
+                
+                card.innerHTML = `
+                    <div>
+                        <img src="${product.image_url || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${product.product_name}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-green-900">${product.product_name}</h3>
+                            <p class="text-lg font-semibold text-orange-600 mt-2">${product.price} บาท</p>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <a href="https://line.me/ti/p/~YOUR_LINE_ID" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 rounded-lg font-semibold transition">
+                            💬 สนใจสั่งซื้อ / สอบถาม
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // เรียกใช้งานฟังก์ชันโหลดข้อมูลเมื่อเปิดเว็บ
+        loadProducts();
+    </script>
+</body>
+</html>
