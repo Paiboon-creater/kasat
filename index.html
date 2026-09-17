@@ -65,6 +65,14 @@
         </div>
     </main>
 
+    <!-- Modal สำหรับแสดงรูปภาพขยายใหญ่ (Lightbox) -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden z-50 flex items-center justify-center p-4 cursor-pointer" onclick="closeModal()">
+        <div class="relative max-w-4xl max-h-[90vh]" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute -top-10 right-0 text-white text-3xl font-bold hover:text-gray-300">&times; ปิด</button>
+            <img id="modalImg" src="" alt="ขยายรูปภาพ" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl object-contain mx-auto">
+        </div>
+    </div>
+
     <!-- ส่วนแนะนำเพิ่มเติม/ติดต่อเรา -->
     <section class="max-w-4xl mx-auto px-4 my-12">
         <div class="bg-white rounded-3xl p-8 shadow-md border border-green-200 text-center">
@@ -88,7 +96,7 @@
         <p class="text-xs text-green-400 mt-3">&copy; 2026 Paiboon Garden. All rights reserved.</p>
     </footer>
 
-    <!-- Supabase Client -->
+    <!-- Supabase Client & ฟังก์ชันคลิกขยายรูป -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://siiiifesdjuunwmwozfb.supabase.co';
@@ -118,13 +126,17 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100';
                 
+                const imgSrc = product.image_url || 'https://via.placeholder.com/400x300?text=No+Image';
                 const lineMsg = encodeURIComponent(`สวัสดีครับ สนใจสั่งซื้อ ${product.product_name} ราคา ${product.price} บาท ครับ`);
                 const lineBuyUrl = `https://line.me/ti/p/~0892463137?text=${lineMsg}`;
 
                 card.innerHTML = `
                     <div>
-                        <div class="overflow-hidden h-48">
-                            <img src="${product.image_url || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${product.product_name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                        <div class="overflow-hidden h-48 cursor-pointer relative group" onclick="openModal('${imgSrc}')">
+                            <img src="${imgSrc}" alt="${product.product_name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-black bg-black bg-opacity-0 group-hover:bg-opacity-25 transition flex items-center justify-center">
+                                <span class="text-white opacity-0 group-hover:opacity-100 bg-black bg-opacity-50 px-3 py-1 rounded-full text-xs font-semibold">🔍 คลิกเพื่อขยาย</span>
+                            </div>
                         </div>
                         <div class="p-5">
                             <h3 class="text-xl font-bold text-green-900">${product.product_name}</h3>
@@ -145,6 +157,19 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // ฟังก์ชันเปิด-ปิด Modal ขยายรูป
+        function openModal(imgUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = imgUrl;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
         }
 
         loadProducts();
