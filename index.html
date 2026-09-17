@@ -26,7 +26,7 @@
         </div>
     </header>
 
-    <!-- ส่วนจุดเด่นของสวน (Features Section) เพื่อไม่ให้หน้าเว็บดูโล่ง -->
+    <!-- ส่วนจุดเด่นของสวน (Features Section) -->
     <section class="max-w-6xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-green-100 text-center hover:shadow-md transition">
@@ -50,7 +50,7 @@
     <!-- ส่วนแสดงรายการสินค้า (Product Grid) -->
     <main class="max-w-6xl mx-auto px-4 py-4">
         <div class="flex justify-between items-center mb-6 border-b-2 border-green-200 pb-2">
-            <h2 class="text-2xl font-semibold text-green-800">📦 รายการพันธุ์ไม้ทั้งหมด</h2>
+            <h2 class="text-2xl font-semibold text-green-800">📦 ผลิตภัณฑ์สินค้าพืชผัก ปลอดสารพิษ 100%</h2>
             <span class="text-sm text-gray-500">อัปเดตสดจากแปลงเพาะพันธุ์</span>
         </div>
         
@@ -113,7 +113,6 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100';
                 
-                // สร้างข้อความสำหรับส่งเข้า LINE เมื่อกดสั่งซื้อสินค้าแต่ละชิ้น
                 const lineMsg = encodeURIComponent(`สวัสดีครับ สนใจสั่งซื้อ ${product.product_name} ราคา ${product.price} บาท ครับ`);
                 const lineBuyUrl = `https://line.me/ti/p/~0892463137?text=${lineMsg}`;
 
@@ -126,7 +125,7 @@
                             <h3 class="text-xl font-bold text-green-900">${product.product_name}</h3>
                             <div class="flex justify-between items-center mt-3">
                                 <span class="text-2xl font-bold text-orange-600">${product.price} <span class="text-sm font-normal text-gray-500">บาท</span></span>
-                                <span class="text-xs bg-green-100 text-green-800 px-2.5 py-1 rounded-full font-medium">พร้อมส่ง</span>
+                                <span class="text-xs bg-green-100 text-green-800 px-2.5 py-1 rounded-full font-medium">ปลอดภัย 100%</span>
                             </div>
                         </div>
                     </div>
